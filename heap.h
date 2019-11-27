@@ -72,4 +72,17 @@ class Heap {
 // Templated function definitions go here!
 // ***************************************
 
+template<class T>
+void Heap::insert(const T& object){}
+
+template<class T>
+T Heap::readTop() const{}
+
+template<class T> 
+void Heap::removeTop(){}
+
+template<class T>
+void Heap::dump() const{}
+
+
 #endif

@@ -79,4 +79,13 @@ class HashTable {
 // Templated function definitions go here! *
 // *****************************************
 
+template <class T>
+bool HashTable::insert(const T& object){}
+
+template<class T>
+bool HashTable::getNext(string key, T& obj){}
+
+template<class T>
+void HashTable::dump() const{}
+
 #endif
