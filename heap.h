@@ -76,13 +76,39 @@ template<class T>
 void Heap::insert(const T& object){}
 
 template<class T>
-T Heap::readTop() const{}
+T Heap::readTop() const{
+  try{
+    if(!empty())
+      return _heap.at(1);
+    else
+      throw range_error("ERROR: ATTEMPT TO READ EMPTY HEAP");
+  }
+  catch(exception &e){
+    cerr << e.what() << endl;
+  }
+    
+    
+}
 
 template<class T> 
 void Heap::removeTop(){}
 
 template<class T>
-void Heap::dump() const{}
+void Heap::dump() const{
+  try{  
+    if(!empty()){
+      for(int i = 1; i < _heap.size(); i++){
+        cout << _heap.at(i) << endl;
+      }
+    }
+    else{
+      throw range_error("ERORR: ATTEMPT TO READ AN EMPTY HEAP");
+    }
+  }
+  catch(exception &e){
+    cerr << e.what() << endl;
+  }
+}
 
 
 #endif
