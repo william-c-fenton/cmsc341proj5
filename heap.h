@@ -65,38 +65,113 @@ class Heap {
   // *********************************************
   // Private helper function declarations go here!
   // *********************************************
-
+  int getHighestChild(int root);
 };
 
 // ***************************************
 // Templated function definitions go here!
 // ***************************************
+template<class T>
+int Heap<T>::getHighestChild(int root){
+  if (root * 2 < _heap.size()){
+    int curr = root;
+    bool leftHighest = curr * 2 < _heap.size();
+    if ((curr * 2) + 1 >= _heap.size()){
+      leftHighest = true;
+    }
+    else if (_heap.at((curr * 2) + 1).priority() > _heap.at(curr * 2).priority()){
+      leftHighest = false;
+    }
+    if (leftHighest)
+      return curr * 2;
+    else
+      return (curr * 2) + 1;
+  }
+  else{
+    return root;
+  }
+}
 
 template<class T>
-void Heap::insert(const T& object){}
+Heap<T>::Heap(){
+  _heap.resize(1);
+}
 
 template<class T>
-T Heap::readTop() const{
+void Heap<T>::insert(const T& object){
+  if(!_used){
+    _heap.push_back(object);
+    _used = true;
+  }
+  else{
+    int curr = _heap.size();
+    int parent = curr / (int) 2;
+    _heap.push_back(object);
+
+    //curr always approaches one with integer division by 2. 
+    //iterate until either curr is one or the heap-order property is 
+    //satisfied
+    while(curr != 1 && (_heap.at(curr).priority() > _heap.at(parent).priority())){
+      //swap values of curr and parent
+      T temp = _heap.at(parent);
+      _heap[parent] = _heap[curr];
+      _heap[curr] = temp;
+
+      //update markers
+      curr = parent;
+      parent = (int)(curr / 2);
+    }
+  }
+}
+
+template<class T>
+T Heap<T>::readTop() const{
   try{
     if(!empty())
       return _heap.at(1);
     else
       throw range_error("ERROR: ATTEMPT TO READ EMPTY HEAP");
   }
-  catch(exception &e){
-    cerr << e.what() << endl;
+  catch(range_error &e){
+    std::cerr << e.what() << endl;
   }
     
     
 }
 
 template<class T> 
-void Heap::removeTop(){}
+void Heap<T>::removeTop(){
+  if(_heap.size() == 1){
+    cout << "Heap is empty" << endl;
+  }
+  else{
+    //swap top with last node added
+    T temp = _heap.at(_heap.size() - 1);
+    _heap[_heap.size() - 1] = _heap[1];
+    _heap[1] = temp;
+    //(aka, node at size() - 1)
+    //delete the last node 
+    _heap.erase(_heap.begin() + _heap.size() - 1);
+    //down-heap
+    int curr = 1;
+    int highest = getHighestChild(curr);
+    while(curr < _heap.size() && (_heap.at(highest).priority() > _heap.at(curr).priority())){
+      T temp = _heap.at(highest);
+      _heap[highest] = _heap[curr];
+      _heap[curr] = temp;
+
+      //update markers
+      curr = highest;
+      highest = getHighestChild(curr);
+    }
+  }
+}
 
 template<class T>
-void Heap::dump() const{
+void Heap<T>::dump() const{
   try{  
     if(!empty()){
+      cout << "\n\t\t-------------\t\t\n";
       for(int i = 1; i < _heap.size(); i++){
         cout << _heap.at(i) << endl;
       }
@@ -105,8 +180,8 @@ void Heap::dump() const{
       throw range_error("ERORR: ATTEMPT TO READ AN EMPTY HEAP");
     }
   }
-  catch(exception &e){
-    cerr << e.what() << endl;
+  catch(range_error &e){
+    std::cerr << e.what() << endl;
   }
 }
 

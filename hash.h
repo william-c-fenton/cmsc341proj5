@@ -80,12 +80,12 @@ class HashTable {
 // *****************************************
 
 template <class T>
-bool HashTable::insert(const T& object){}
+bool HashTable<T>::insert(const T& object){}
 
 template<class T>
-bool HashTable::getNext(string key, T& obj){}
+bool HashTable<T>::getNext(string key, T& obj){}
 
 template<class T>
-void HashTable::dump() const{}
+void HashTable<T>::dump() const{}
 
 #endif
