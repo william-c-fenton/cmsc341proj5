@@ -96,30 +96,42 @@ int HashTable<T>::findIndex(string key){
     return ind;
   }
   else{
-    int temp = ind;
-    int count = 0;
-    
-    while(_table[ind].readTop().key() != key && count <= _N){
-      count++;
-      ind = (ind + 1) % _N;
-    } 
-    
-    if (count = _N){
-      try{
-        throw range_error("ERROR: LIST FULL AND ITEM NOT FOUND");
+    if (!_table[ind].empty()){
+      int temp = ind;
+      int count = 0;
+
+      T obj = _table[ind].readTop();
+      
+      while(obj.key() != key && count <= _N){
+        count++;
+        ind = (ind + 1) % _N;
+        try{
+          obj = _table[ind].readTop();
+        }
+        catch(range_error &e){
+        }
+      } 
+      
+      if (count == _N){
+        try{
+          throw range_error("ERROR: LIST FULL AND ITEM NOT FOUND");
+        }
+        catch(range_error &e){
+          std::cerr << e.what() << endl;
+        }
+        return -1;
       }
-      catch(range_error &e){
-        std::cerr << e.what() << endl;
-      }
-      return -1;
+      return ind;
     }
-    return ind;
+    else{
+      return ind;
+    }
   }
 }
 
 template<class T>
 HashTable<T>::~HashTable(){
-
+  delete [] _table;
 }
 
 template <class T>
@@ -137,13 +149,28 @@ bool HashTable<T>::insert(const T& object){
 
 template<class T>
 bool HashTable<T>::getNext(string key, T& obj){
+  int index = findIndex(key);
 
+  if (_table[index].empty()){
+    return false;
+  }
+  else{
+    obj = _table[index].readTop();
+    _table[index].removeTop();
+    return true;
+  }
 }
 
 template<class T>
 void HashTable<T>::dump() const{
   for(int i = 0; i < _N; i++){
-    _table[i].dump();
+    cout << "[" << i << "]:";
+    try{
+      _table[i].dump();
+    }
+    catch(range_error &e){
+      cout << "No orders" << endl;
+    }
   }
 }
 
