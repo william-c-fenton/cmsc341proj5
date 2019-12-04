@@ -1,35 +1,32 @@
 #include <iostream>
 #include "heap.h"
 #include "Donut.h"
-
+#include "hash.h"
 using namespace std;
+unsigned cyclic_hash16(string key);
 
 int main(){
 Heap<Donut> T;
-T.insert(Donut("glazed", 5, "super donut"));
-T.insert(Donut("sprinkle", 8, "shack of donuts"));
-T.insert(Donut("glazed", 12, "mega donut"));
-T.insert(Donut("boston cream", 3, "donut joint"));
-T.insert(Donut("bonston cream", 10, "mega donut"));
-T.insert(Donut("cinnamon", 3, "shack of donuts"));
-T.insert(Donut("sprinkle", 7, "donut world"));
+HashTable<Donut> G(10, cyclic_hash16);
+G.dump();
+cout << cyclic_hash16("cinnamon") << endl;
 
-T.insert(Donut("sprinkle", 15, "super donut"));
+G.insert(Donut("glazed", 5, "super donut"));
+cout << cyclic_hash16("glazed") % 10 << endl;
+G.dump();
 
-T.dump();
-
-T.removeTop();
-
-T.dump();
-
-T.removeTop();
-T.dump();
-T.removeTop();
-T.dump();
-T.removeTop();
-T.dump();
-T.removeTop();
-T.dump();
 return 0;
 }
 
+
+unsigned cyclic_hash16(string key) {
+  unsigned usize = 16;
+  unsigned s = 5; // shift by 5
+  unsigned h = 0;
+  for (auto c : key) {
+    h = (( h << s ) | ( h >> (usize - s) ));
+    h += c;
+    h = h & 0xffff;
+  }
+  return h;
+}

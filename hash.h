@@ -72,20 +72,79 @@ class HashTable {
   // ***********************************************
   // Private helper function declarations go here! *
   // ***********************************************
-  
+  int findIndex(string key);
 };
 
 // *****************************************
 // Templated function definitions go here! *
 // *****************************************
+template <class T>
+HashTable<T>::HashTable(unsigned size, hash_fn hash){
+  _N = size;
+  _hash = hash;
+  _table = new Heap<T>[_N];
+  for (int i = 0; i < _N; i++){
+    _table[i] = Heap<T>();
+  }
+
+}
 
 template <class T>
-bool HashTable<T>::insert(const T& object){}
+int HashTable<T>::findIndex(string key){
+  int ind = _hash(key) % _N;
+  if(!_table[ind].used() ){
+    return ind;
+  }
+  else{
+    int temp = ind;
+    int count = 0;
+    
+    while(_table[ind].readTop().key() != key && count <= _N){
+      count++;
+      ind = (ind + 1) % _N;
+    } 
+    
+    if (count = _N){
+      try{
+        throw range_error("ERROR: LIST FULL AND ITEM NOT FOUND");
+      }
+      catch(range_error &e){
+        std::cerr << e.what() << endl;
+      }
+      return -1;
+    }
+    return ind;
+  }
+}
 
 template<class T>
-bool HashTable<T>::getNext(string key, T& obj){}
+HashTable<T>::~HashTable(){
+
+}
+
+template <class T>
+bool HashTable<T>::insert(const T& object){
+  int index = findIndex(object.key());
+  if (index != -1){
+    _table[index].insert(object);
+
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 
 template<class T>
-void HashTable<T>::dump() const{}
+bool HashTable<T>::getNext(string key, T& obj){
+
+}
+
+template<class T>
+void HashTable<T>::dump() const{
+  for(int i = 0; i < _N; i++){
+    _table[i].dump();
+  }
+}
 
 #endif
