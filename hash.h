@@ -79,6 +79,31 @@ class HashTable {
 // Templated function definitions go here! *
 // *****************************************
 template <class T>
+HashTable<T>::HashTable(const HashTable<T>& ht){
+  cout << "HELP!" << endl;
+  _N = ht.tableSize();
+  _n = ht._n;
+  _hash = ht._hash;
+  _table = new Heap<T>[_N];
+  for(int i = 0; i < ht.tableSize(); i++){
+    _table[i] = ht._table[i];
+  }
+}
+
+template <class T>
+const HashTable<T>& HashTable<T>::operator= (const HashTable<T>& ht){
+  _N = ht.tableSize();
+  _n = ht._n;
+  _hash = ht._hash;
+  delete [] _table;
+  _table = new Heap<T>[_N];
+  for(int i = 0; i < ht.tableSize(); i++){
+    _table[i] = ht._table[i];
+  }
+  return *this;
+}
+
+template <class T>
 HashTable<T>::HashTable(unsigned size, hash_fn hash){
   _N = size;
   _hash = hash;
@@ -93,35 +118,51 @@ template <class T>
 int HashTable<T>::findIndex(string key){
   int ind = _hash(key) % _N;
   if(!_table[ind].used() ){
+    _n++;
     return ind;
   }
   else{
-    if (!_table[ind].empty()){
-      int temp = ind;
-      int count = 0;
-
-      T obj = _table[ind].readTop();
-      
-      while(obj.key() != key && count <= _N){
-        count++;
-        ind = (ind + 1) % _N;
-        try{
-          obj = _table[ind].readTop();
-        }
-        catch(range_error &e){
-        }
-      } 
-      
-      if (count == _N){
-        try{
-          throw range_error("ERROR: LIST FULL AND ITEM NOT FOUND");
-        }
-        catch(range_error &e){
-          std::cerr << e.what() << endl;
-        }
-        return -1;
+    //if table index has been used
+    //iterate until next unused slot OR next slot w/ match key
+    int i = 0;
+    bool match;
+    try{
+      if(_table[ind].readTop().key() == key){
+        match = true;
       }
-      return ind;
+      else{
+        match = false;
+      }
+    }
+    catch(range_error &e){
+      cout << "";
+    }
+    while (i <= _N && !match){
+      ind = (ind + 1) % _N;
+      Heap<T> obj = _table[ind];
+
+      if(!obj.used()){
+        match = true;
+      }
+      else{
+        if(!obj.empty()){
+          try{
+            if(obj.readTop().key() == key){
+              match = true;
+            }
+          }
+          catch(range_error &e){
+            cout << "";
+          }
+        }
+        else{
+          cout << "memory erro?!?" << endl;
+        }
+      }
+
+    }
+    if(i == _N){
+      return -1;
     }
     else{
       return ind;
