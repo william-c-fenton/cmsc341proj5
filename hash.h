@@ -143,7 +143,7 @@ int HashTable<T>::findIndex(string key){
       cout << "range error" << endl;
     }
 
-    while (i <= _N && !match){
+    while (i <= (_N + 1) && !match){
       ind = (ind + 1) % _N;
       Heap<T> obj = _table[ind];
 
@@ -165,13 +165,12 @@ int HashTable<T>::findIndex(string key){
           }
         }
         else{
-          cout << "List full" << endl;
+          cout << "";
         }
       }
-
+      i++;
     }
-    
-    if(i == _N){
+    if(i >= _N){
       return -1;
     }
     else{
@@ -202,13 +201,18 @@ template<class T>
 bool HashTable<T>::getNext(string key, T& obj){
   int index = findIndex(key);
 
-  if (_table[index].empty()){
+  if (index == -1){
     return false;
   }
   else{
-    obj = _table[index].readTop();
-    _table[index].removeTop();
-    return true;
+    if(!_table[index].empty()){
+      obj = _table[index].readTop();
+      _table[index].removeTop();
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }
 

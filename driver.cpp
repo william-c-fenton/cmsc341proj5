@@ -23,6 +23,12 @@ int main() {
   donuts.push_back(Donut("cinnamon", 3, "shack of donuts"));
   donuts.push_back(Donut("bavarian cream", 28, "mega donut"));
   donuts.push_back(Donut("cinnamon", 11, "super donut"));
+  donuts.push_back(Donut("cruller", 3, "mega dingus"));
+  donuts.push_back(Donut("plain", 69, "Bruh donut"));
+  donuts.push_back(Donut("chocolate", 9, "bruh donut"));
+  donuts.push_back(Donut("powdered", 4, "bruh"));
+  donuts.push_back(Donut("Peen", 9, "donut"));
+  donuts.push_back(Donut("Mega", 4, "donu"));
 
   // Create the hash table of length 10 using cyclic_hash function
   HashTable<Donut> ht(10, cyclic_hash16);
