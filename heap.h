@@ -94,12 +94,14 @@ int Heap<T>::getHighestChild(int root){
 
 template<class T>
 Heap<T>::Heap(){
+  _used = false;
   _heap.resize(1);
 }
 
 template<class T>
 void Heap<T>::insert(const T& object){
   if(!_used){
+    _heap[0] = T(object.key(), 0, "");
     _heap.push_back(object);
     _used = true;
   }
@@ -160,6 +162,7 @@ void Heap<T>::removeTop(){
       curr = highest;
       highest = getHighestChild(curr);
     }
+
   }
 }
 

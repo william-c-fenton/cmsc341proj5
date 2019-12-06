@@ -80,7 +80,6 @@ class HashTable {
 // *****************************************
 template <class T>
 HashTable<T>::HashTable(const HashTable<T>& ht){
-  cout << "HELP!" << endl;
   _N = ht.tableSize();
   _n = ht._n;
   _hash = ht._hash;
@@ -126,17 +125,24 @@ int HashTable<T>::findIndex(string key){
     //iterate until next unused slot OR next slot w/ match key
     int i = 0;
     bool match;
+    
     try{
-      if(_table[ind].readTop().key() == key){
-        match = true;
+      if(!_table[ind].empty()){
+        if(_table[ind].readTop().key() == key){
+          match = true;
+        }
+        else{
+          match = false;
+        }
       }
       else{
         match = false;
       }
     }
     catch(range_error &e){
-      cout << "";
+      cout << "range error" << endl;
     }
+
     while (i <= _N && !match){
       ind = (ind + 1) % _N;
       Heap<T> obj = _table[ind];
@@ -145,22 +151,26 @@ int HashTable<T>::findIndex(string key){
         match = true;
       }
       else{
+        
         if(!obj.empty()){
+
           try{
+            
             if(obj.readTop().key() == key){
               match = true;
             }
           }
           catch(range_error &e){
-            cout << "";
+            cout << "range error" << endl;
           }
         }
         else{
-          cout << "memory erro?!?" << endl;
+          cout << "List full" << endl;
         }
       }
 
     }
+    
     if(i == _N){
       return -1;
     }
@@ -210,7 +220,7 @@ void HashTable<T>::dump() const{
       _table[i].dump();
     }
     catch(range_error &e){
-      cout << "No orders" << endl;
+      cout << "" << endl;
     }
   }
 }

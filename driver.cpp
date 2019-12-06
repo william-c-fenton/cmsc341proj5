@@ -9,8 +9,6 @@ using namespace std;
 unsigned cyclic_hash16(string key);
 
 int main() {
-
-  cout << cyclic_hash16("cinnamon") % 10 << endl;
   // Create a vector of donuts to insert in the hash table
   vector<Donut> donuts;
   donuts.push_back(Donut("glazed", 5, "super donut"));
@@ -29,7 +27,7 @@ int main() {
   // Create the hash table of length 10 using cyclic_hash function
   HashTable<Donut> ht(10, cyclic_hash16);
 
-  cout << "inserting" << endl;
+  
   // Insert the donut orders
   for (auto d : donuts) {
     ht.insert(d);
